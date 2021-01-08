@@ -1,28 +1,22 @@
 <template>
   <div class="home">
-    <div id="container">demo01</div>
+    <div id="container"></div>
   </div>
 </template>
 
 <script>
 import * as THREE from 'three'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import HelloWorld from '@/components/HelloWorld.vue';
 import { error, log } from 'three';
 
 export default {
   name: 'Home',
-  components: {
-    HelloWorld
-  },
+  components: {},
   data() {
     return {
       camera: null,
       scene: null,
       renderer: null,
-      // 导入3D模型的分层数组
-      objectLista: []
     };
   },
    methods: {

@@ -5,24 +5,28 @@
 </template>
 
 <script>
-import * as THREE from 'three'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import HelloWorld from '@/components/HelloWorld.vue';
-import { error, log } from 'three';
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { error, Geometry, log } from 'three';
+import Stats from 'three/examples/jsm/libs/stats.module';
 
 export default {
   name: 'Home',
-  components: {
-    HelloWorld
-  },
+  components: {},
   data() {
     return {
       camera: null,
+      camera2: null,
+      camera2Helper: null,
       scene: null,
       renderer: null,
-      // 导入3D模型的分层数组
-      objectLista: []
+      mesh: null,
+      activeCamera: null,
+      activeHelper: null,
+      cameraOrtho: null,
+      cameraOrthoHelper: null,
+      stats: null,
+      cameraRig: null
     };
   },
    methods: {
@@ -32,51 +36,156 @@ export default {
       // 场景
       this.scene = new THREE.Scene();
 
-      // 透视摄像机
+      // 透视摄像机一
       this.camera = new THREE.PerspectiveCamera(
-        70,
-        container.clientWidth / container.clientHeight,
+        50,
+        0.5*(container.clientWidth / container.clientHeight),
         0.01,
-        10
+        10000
       );
-      this.camera.position.z = 0.6;
+      this.camera.position.z = 2500;
+
+      // 透视相机二
+      this.camera2 = new THREE.PerspectiveCamera(
+        50,
+        0.5*(container.clientWidth / container.clientHeight),
+        150,
+        1000
+      );
+      this.camera2Helper = new THREE.CameraHelper(this.camera2);
+      this.scene.add(this.camera2Helper);
+
 
       // 渲染函数
       this.renderer = new THREE.WebGLRenderer({ antialias: true });
+      this.renderer.setPixelRatio(window.devicePixelRatio);
       this.renderer.setSize(container.clientWidth, container.clientHeight);
       container.appendChild(this.renderer.domElement);
+      this.renderer.autoClear = false;
 
-      // 地板
-      this.camera.position.set(0.1, 0.2, 0.8)
-      const ground = new THREE.Mesh(
-        new THREE.PlaneBufferGeometry(9,9,1,1),
-        new THREE.MeshPhongMaterial({color: 0xaaaaaa, shininess: 150})
+      this.cameraOrtho = new THREE.OrthographicCamera(300 * (container.clientWidth / container.clientHeight) / -2, 300 * (container.clientWidth / container.clientHeight) / 2, 300, -300, 150, 1000);
+      this.cameraOrthoHelper = new THREE.CameraHelper(this.cameraOrtho);
+      this.scene.add(this.cameraOrthoHelper);
+
+      this.activeCamera = this.camera2
+      this.activeHelper = this.camera2Helper
+
+      this.cameraOrtho.rotation.y = Math.PI;
+      this.camera.rotation.y = Math.PI;
+
+      this.cameraRig = new THREE.Group();
+      this.cameraRig.add(this.camera);
+      this.cameraRig.add(this.cameraOrtho);
+      this.scene.add(this.cameraRig);
+
+      this.mesh = new THREE.Mesh(
+        new THREE.SphereBufferGeometry(100,16,8),
+        new THREE.MeshBasicMaterial({color: 0xfffff, wireframe: true})
       );
-      ground.rotation.x = - Math.PI / 2  // rotates X/Y to X/Z
-      ground.receiveShadow = true;
-      this.scene.add(ground)
+      this.scene.add(this.mesh);
 
-      // 摄像机控制器
-      const controls = new OrbitControls(this.camera, this.renderer.domElement);
-  
+      const mesh2 = new THREE.Mesh(
+        new THREE.SphereBufferGeometry(50,16,8),
+        new THREE.MeshBasicMaterial({color: 0x00ff00, wireframe: true})
+      );
+      mesh2.position.y = 150;
+      this.scene.add(mesh2);
 
-      // 光线投射
-      const light = new THREE.AmbientLight(0xfffffff)
-      this.scene.add(light)
+      const mesh3 = new THREE.Mesh(
+        new THREE.SphereBufferGeometry(5,16,8),
+        new THREE.MeshBasicMaterial({color: 0x0000ff, wireframe: true})
+      );
+      mesh3.position.y = 150;
+      this.scene.add(mesh3);
 
-      // 平行光
-      const light1 = new THREE.DirectionalLight(0x66462a, 0.8);
-      light1.position.set(10,10,5);
-      this.scene.add(light1);
+      const geometry = new THREE.BufferGeometry();
+      const vertices = [];
 
-      // 定义场景背景颜色
-      this.scene.background = new THREE.Color(0xeeeeee)
+      for (let i = 0; i < 1000; i++) {
+        vertices.push(THREE.MathUtils.randFloatSpread(2000));  // x
+        vertices.push(THREE.MathUtils.randFloatSpread(2000));  // y
+        vertices.push(THREE.MathUtils.randFloatSpread(2000));  // z
+      }
+
+      geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+
+      const particles = new THREE.Points(geometry, new THREE.PointsMaterial({color: 0x888888}));
+      this.scene.add(particles);
+
+      this.stats = new Stats();
+      container.appendChild(this.stats.dom)
+
+      // 监控函数
+      document.addEventListener('keydown', onkeydown, false);
+    },
+
+    // 键盘按下函数
+    onkeydown(event) {
+      switch(event.keyCode) {
+        case 79: 
+          this.activeCamera = this.cameraOrtho;
+          this.activeHelper = this.cameraOrthoHelper;
+          break;
+
+        case 80:
+          this.activeCamera = this.camera2;
+          this.activeHelper = this.camera2Helper;
+          break;
+      }
     },
     
     // 动画函数
     animate: function() {
       requestAnimationFrame(this.animate);
       this.renderer.render(this.scene, this.camera);
+
+      const r = Date.now() * 0.0005;
+
+			this.mesh.position.x = 700 * Math.cos( r );
+			this.mesh.position.z = 700 * Math.sin( r );
+			this.mesh.position.y = 700 * Math.sin( r );
+
+			this.mesh.children[ 0 ].position.x = 70 * Math.cos( 2 * r );
+			this.mesh.children[ 0 ].position.z = 70 * Math.sin( r );
+
+			if ( activeCamera === cameraPerspective ) {
+
+				this.cameraPerspective.fov = 35 + 30 * Math.sin( 0.5 * r );
+				this.cameraPerspective.far = this.mesh.position.length();
+				this.cameraPerspective.updateProjectionMatrix();
+
+				this.cameraPerspectiveHelper.update();
+				this.cameraPerspectiveHelper.visible = true;
+
+				cameraOrthoHelper.visible = false;
+
+			} else {
+
+				this.cameraOrtho.far = this.mesh.position.length();
+				this.cameraOrtho.updateProjectionMatrix();
+
+				this.cameraOrthoHelper.update();
+				this.cameraOrthoHelper.visible = true;
+
+				this.cameraPerspectiveHelper.visible = false;
+
+			}
+
+			this.cameraRig.lookAt( this.mesh.position );
+
+			this.renderer.clear();
+
+			this.activeHelper.visible = false;
+
+			this.renderer.setViewport( 0, 0, window.innerWidth / 2, window.innerHeight );
+			this.renderer.render( this.scene, this.activeCamera );
+
+			this.activeHelper.visible = true;
+
+			this.renderer.setViewport( window.innerWidth / 2, 0, window.innerWidth / 2, window.innerHeight );
+      this.renderer.render( this.scene, this.camera );
+      
+      this.stats.update();
     },
   },
   mounted() {
@@ -86,7 +195,11 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-#container {
-  height: 700px;
+.home {
+  #container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>

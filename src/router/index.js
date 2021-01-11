@@ -13,12 +13,7 @@ const routes = [
   {
     path: '/home',
     redirect: '/'
-  },
-  {
-    path: '/demo01',
-    name: 'Demo01',
-    component: () => import('../views/Demo01.vue')
-  },
+  }
 ]
 
 const router = new VueRouter({

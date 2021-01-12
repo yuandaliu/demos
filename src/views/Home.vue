@@ -37,8 +37,7 @@ export default {
   },
   methods: {
     init() {
-      this.container = document.createElement("div");
-      document.body.appendChild(this.container);
+      this.container = document.getElementById("container")
 
       this.scene = new THREE.Scene();
 

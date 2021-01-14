@@ -23,6 +23,11 @@ const routes = [
     path: '/spotLight',
     name: 'SpotLight',
     component: () => import('../views/SpotLight.vue')
+  },
+  {
+    path: '/practice',
+    name: 'Practice',
+    component: () => import('../views/Practice.vue')
   }
 ]
 

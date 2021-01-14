@@ -1,5 +1,7 @@
 <template>
-  <div class="threeLight"></div>
+  <div class="threeLight">
+    <div id="container"></div>
+  </div>
 </template>
 
 <script>
@@ -34,9 +36,9 @@ export default {
   },
 
   mounted() {
-    this.init();
-    this.render();
-    this.animate();
+    // this.init();
+    // this.render();
+    // this.animate();
   },
 
   methods: {

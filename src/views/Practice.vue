@@ -16,7 +16,8 @@ export default {
       scene: null,
       camera: null,
       renderer: null,
-      cube: null
+      cube: null,
+      controls: null
     }
   },
 
@@ -51,7 +52,7 @@ export default {
       this.$refs.container.appendChild(this.renderer.domElement)
 
       // 相机控制器
-      const controls = new OrbitControls(this.camera, this.renderer.domElement)
+      this.controls = new OrbitControls(this.camera, this.renderer.domElement)
 
       // // 立方体1
       // const geometry = new THREE.BoxGeometry()
@@ -59,15 +60,11 @@ export default {
       // this.cube = new THREE.Mesh(geometry, material)        // 构成物体的类 基类为Object3D
       // this.scene.add(this.cube)
 
-      // 创建环境贴图
-      const texture = new THREE.TextureLoader().load('images/tree.jpg')
-
       // 立方体2
       const geometry = new THREE.SphereGeometry(1, 32, 32)
       // 材质
       const material = new THREE.MeshStandardMaterial({
-        color: '#ffffff',
-        map: texture
+        color: '#000000'
       })
       this.cube = new THREE.Mesh(geometry, material) // 生成网格
       this.cube.castShadow = true // 对象是否渲染到阴影贴图中，默认值为false
@@ -82,7 +79,7 @@ export default {
       const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5)
       directionalLight.position.set(10, 10, 10) // 平行光相对物体投射的源头位置
       directionalLight.castShadow = true // 开启平行光产生阴影的效果 默认是false
-      directionalLight.target = this.cube
+      directionalLight.target = this.cube // 光线投射的目标
       this.scene.add(directionalLight)
 
       // 创建一个接受阴影的平面
@@ -99,6 +96,7 @@ export default {
     animate () {
       // 实时渲染动画，页面切换离开会停下，性能比较好
       requestAnimationFrame(this.animate)
+      this.controls.update()
       // // 为模型添加动画
       // this.cube.rotation.x += 0.01
       // this.cube.rotation.y += 0.01

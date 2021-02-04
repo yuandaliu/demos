@@ -36,17 +36,20 @@ export default {
   },
 
   mounted() {
-    // this.init();
-    // this.render();
-    // this.animate();
+    this.init();
+    this.render();
+    this.animate();
   },
 
   methods: {
     init() {
       this.renderer = new THREE.WebGLRenderer();
+      // 开启渲染器渲染阴影的效果
+      this.renderer.shadowMap.enabled = true
+      this.renderer.shadowMap.type = THREE.PFCSoftShadowMap // 阴影类型
       this.renderer.setPixelRatio(window.devicePixelRatio);
 
-      this.camera = new THREE.PerspectiveCamera(35, window.innerWidth/window.innerHeight, 1, 2000);
+      this.camera = new THREE.PerspectiveCamera(35, window.innerWidth/window.innerHeight, 1, 10000);
 
       this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
@@ -54,13 +57,13 @@ export default {
 
       this.matFloor = new THREE.MeshPhongMaterial();
       this.matBox = new THREE.MeshPhongMaterial({color: 0xaaaaaa});
-
       this.geoFloor = new THREE.PlaneBufferGeometry(2000, 2000);
       this.geoBox = new THREE.BoxBufferGeometry(3, 1, 2);
-
       this.mshFloor = new THREE.Mesh(this.geoFloor, this.matFloor);
+      this.mshFloor.receiveShadow = true
       this.mshFloor.rotation.x = - Math.PI * 0.5;
       this.mshBox = new THREE.Mesh(this.geoBox, this.matBox)
+      this.mshBox.castShadow = true
 
       this.ambient = new THREE.AmbientLight(0x111111);
 

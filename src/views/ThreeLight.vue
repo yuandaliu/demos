@@ -1,6 +1,6 @@
 <template>
   <div class="threeLight">
-    <div id="container"></div>
+    <div id="container" ref="container"></div>
   </div>
 </template>
 
@@ -49,7 +49,7 @@ export default {
       this.renderer.shadowMap.type = THREE.PFCSoftShadowMap // 阴影类型
       this.renderer.setPixelRatio(window.devicePixelRatio);
 
-      this.camera = new THREE.PerspectiveCamera(35, window.innerWidth/window.innerHeight, 1, 10000);
+      this.camera = new THREE.PerspectiveCamera(35, this.$refs.container.innerWidth/this.$refs.container.innerHeight, 1, 10000);
 
       this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
@@ -100,7 +100,7 @@ export default {
       this.scene.add(this.spotLight1, this.spotLight2, this.spotLight3);
       this.scene.add(this.lightHelper1, this.lightHelper2, this.lightHelper3);
 
-      document.body.appendChild(this.renderer.domElement);
+      this.$refs.container.appendChild(this.renderer.domElement);
       this.onResize();
       window.addEventListener('resize', this.onResize, false);
 
@@ -164,5 +164,9 @@ export default {
 </script>
 
 <style scoped lang="less">
-.threeLight{}
+.threeLight{
+  #container {
+    height: 700px;
+  }
+}
 </style>

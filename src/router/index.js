@@ -10,8 +10,8 @@ const routes = [
     component: () => import('../views/ThreeLight.vue')
   },
   {
-    path: '/threeLight',
-    redirect: '/'
+    path: '/',
+    redirect: '/threeLight'
   },
   {
     path: '/practice',
@@ -22,6 +22,11 @@ const routes = [
     path: '/ball',
     name: 'Ball',
     component: () => import('../views/Ball.vue')
+  },
+  {
+    path: '/createModel',
+    name: 'CreateModel',
+    component: () => import('../views/CreateModel.vue')
   }
 ]
 

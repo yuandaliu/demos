@@ -10,20 +10,20 @@ import { AsciiEffect } from 'three/examples/jsm/effects/AsciiEffect'
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls'
 
 export default {
-  data() {
+  data () {
     return {
       camera: null, // 相机
-      scene: null,  // 场景
-      renderer: null,  // 渲染
-      controls: null,  //  控制器
-      effect: null, 
-      sphere: null,  //  球
-      plane: null,  //  面
-      start: Date.now() 
-    };
+      scene: null, // 场景
+      renderer: null, // 渲染
+      controls: null, //  控制器
+      effect: null,
+      sphere: null, //  球
+      plane: null, //  面
+      start: Date.now()
+    }
   },
 
-  mounted() {
+  mounted () {
     this.init()
     this.animate()
   },
@@ -44,19 +44,19 @@ export default {
       pointLight1.position.set(500, 500, 500)
       this.scene.add(pointLight1)
 
-      // 点光源2 
+      // 点光源2
       const pointLight2 = new THREE.PointLight(0xffffff, 0.25)
       pointLight2.position.set(-500, -500, -500)
       this.scene.add(pointLight2)
 
       // 创建球形几何体
-      this.sphere = new THREE.Mesh(new THREE.SphereGeometry(200, 20, 10), new THREE.MeshPhongMaterial({flatShading: true}))
+      this.sphere = new THREE.Mesh(new THREE.SphereGeometry(200, 20, 10), new THREE.MeshPhongMaterial({ flatShading: true }))
       this.scene.add(this.sphere)
 
       // 创建面
-      this.plane = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshBasicMaterial({color: 0xe0e0e0}))
+      this.plane = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshBasicMaterial({ color: 0xe0e0e0 }))
       this.plane.position.y = -200
-      this.plane.rotation.x = - Math.PI / 2
+      this.plane.rotation.x = -Math.PI / 2
       this.scene.add(this.plane)
 
       // 渲染
@@ -64,7 +64,7 @@ export default {
       this.renderer.setSize(this.$refs.container.clientWidth, this.$refs.container.clientHeight)
 
       //  effect
-      this.effect = new AsciiEffect(this.renderer, ' .:-+*=%@#', {invert: true})
+      this.effect = new AsciiEffect(this.renderer, ' .:-+*=%@#', { invert: true })
       this.effect.setSize(this.$refs.container.clientWidth, this.$refs.container.clientHeight)
       this.effect.domElement.style.color = 'white'
       this.effect.domElement.style.backgroundColor = 'black'
@@ -101,7 +101,7 @@ export default {
       this.effect.render(this.scene, this.camera)
     }
   }
-};
+}
 </script>
 
 <style scoped lang="less">

@@ -4,7 +4,8 @@
       <router-link to="/threeLight">ThreeLight</router-link> |
       <router-link to="/practice">Practice</router-link> |
       <router-link to="/ball">Ball</router-link> |
-      <router-link to="/createModel">CreateModel</router-link>
+      <router-link to="/createModel">CreateModel</router-link> |
+      <router-link to="/mapboxDemo01">MapboxDemo01</router-link>
     </div>
     <router-view/>
   </div>

@@ -27,6 +27,11 @@ const routes = [
     path: '/createModel',
     name: 'CreateModel',
     component: () => import('../views/CreateModel.vue')
+  },
+  {
+    path: '/mapboxDemo01',
+    name: 'MapboxDemo01',
+    component: () => import('../views/MapboxDemo01.vue')
   }
 ]
 

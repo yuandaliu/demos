@@ -22,11 +22,11 @@ export default {
       var map = new mapboxgl.Map({
       container: 'map', // container id 绑定的组件的id
       style: 'mapbox://styles/name001/ckm2vkydl87kb17qozuzqply6', //地图样式，可以使用官网预定义的样式,也可以自定义
-      center: [120.205522, 30.209156], // 初始坐标系，这个是南京建邺附近
+      center: [120.205522, 30.209156], // 初始坐标中心
       zoom: 17,     // starting zoom 地图初始的拉伸比例
       pitch: 60,  //地图的角度，不写默认是0，取值是0-60度，一般在3D中使用
       bearing: -17.6, //地图的初始方向，值是北的逆时针度数，默认是0，即是正北
-      antialias: false, //抗锯齿，通过false关闭提升性能
+      antialias: false, //抗锯齿，false 关闭提升性能
       });
       map.on('load', function() {
         var layers = map.getStyle().layers;

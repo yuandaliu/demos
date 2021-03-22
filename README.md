@@ -1,4 +1,4 @@
-# threejs官方案例练习
+# 练习
 
 ## Project setup
 ```
